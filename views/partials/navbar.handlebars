@@ -7,7 +7,21 @@
             amigo nerd</a>
         </div>
         <div class="pull-right">
-            <a href="/planos/new" class="btn btn-default navbar-btn">novo plano</a>
+            {{#if currentUser}}
+            <a href="/planos" class="btn btn-default navbar-btn">novo plano</a>
+            {{/if}}
         </div>
+
+        <ul class="nav navbar-nav">
+            {{#if currentUser}}
+                <li><a href="/logout">sair</a></li>
+            {{else}}
+                <li><a href="/sign-up">inscrever</a></li>
+                <li><a href="/login">entrar</a></li>
+            {{/if}}
+
+            
+        </ul>
+
     </div>
 </nav>

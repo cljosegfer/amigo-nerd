@@ -4,9 +4,11 @@ module.exports = function(app){
     
     // index
     app.get('/planos/index', (req, res) => {
+        var currentUser = req.user
+
         Plano.find().lean()
         .then(planos => {
-            res.render('planos-index', {planos: planos})
+            res.render('planos-index', { planos, currentUser })
         })
         .catch(err => {
             console.log(err)
@@ -14,28 +16,37 @@ module.exports = function(app){
     })
 
     // new
-    app.get('/planos/new', (req, res) => {
-        res.render('planos-new', {})
+    app.get('/planos', (req, res) => {
+        var currentUser = req.user
+
+        res.render('planos-new', { currentUser })
     })
 
     // create
     app.post('/planos', (req, res) => {
-        Plano.create(req.body)
-        .then((plano) => {
-            console.log(plano)
-            res.redirect(`/planos/${plano._id}`)
-        })
-        .catch((err) => {
-            console.log(err.message)
-        })
+        if (req.user) {
+            Plano.create(req.body)
+            .then((plano) => {
+                console.log(plano)
+                res.redirect(`/planos/${plano._id}`)
+            })
+            .catch((err) => {
+                console.log(err.message)
+            })
+        }
+        else {
+            return res.status(401)
+        }
     })
 
     // show
     app.get('/planos/:id', (req, res) => {
+        var currentUser = req.user
+
         Plano.findById(req.params.id).lean()
         .populate('comments')
         .then((plano) => {
-            res.render('planos-show', { plano: plano })
+            res.render('planos-show', { plano, currentUser })
         })
         .catch((err) => {
             console.log(err.message)
@@ -44,8 +55,10 @@ module.exports = function(app){
 
     // edit
     app.get('/planos/:id/edit', (req, res) => {
+        var currentUser = req.user
+
         Plano.findById(req.params.id, function(err, plano) {
-            res.render('planos-edit', {plano: plano})
+            res.render('planos-edit', { planos, currentUser })
         }).lean()
     })
 
