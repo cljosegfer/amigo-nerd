@@ -1,0 +1,18 @@
+<!-- views/planos-edit.handlebars -->
+
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+        <form method="POST" action="/planos/{{plano._id}}?_method=PUT">
+
+        <!-- form -->
+        {{> planos-form}}
+
+        <!-- button -->
+        <p>
+            <button type="submit">salvar</button>
+            <button type="menu">cancelar</button>
+        </p>
+
+        </form>
+    </div>
+</div>

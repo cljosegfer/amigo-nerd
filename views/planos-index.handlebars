@@ -1,0 +1,21 @@
+<!-- views/planos-index.handlebars -->
+
+<h1>planos</h1>
+
+<div class="row">
+    {{#each planos}}
+    <div class="col-md-3">
+        <div class="card" style="width: 18rem;">
+
+            <div class="card-body">
+                <h2 class="card-title">
+                    <a href="/planos/{{this._id}}">{{this.title}}</a>
+                </h2>
+                <p class="card-text">
+                    {{this.description}}
+                </p>
+            </div>
+        </div>
+    </div>
+    {{/each}}
+</div>

@@ -1,0 +1,17 @@
+<!-- views/planos-new.handlebars -->
+
+<div class="row">
+    <div class="col-sm-5 col-sm-offset-5">
+        <form action="/planos" method="post">
+            <legend>novo plano</legend>
+
+            <!-- form -->
+            {{>planos-form}}
+
+            <!-- button -->
+            <div class='text-right'>
+                <button type="submit" class="btn btn-primary">criar novo plano</button>
+            </div>
+        </form>
+    </div>
+</div>

@@ -1,0 +1,32 @@
+<!-- views/planos-show.handlebars -->
+
+<a href="/planos/index">back to index</a>
+<div class="row">
+    <div class="col-sm-6 col-sm-offset-3">
+        <h1>{{plano.title}}</h1>
+        <p>{{plano.description}}</p>
+
+        <p>
+            <form method="GET" action="/planos/{{plano._id}}/edit">
+            <button type="submit">editar</button>
+            </form>
+        </p>
+        
+        <p>
+            <form method="POST" action="/planos/{{plano._id}}?_method=DELETE">
+            <button type="submit">deletar</button>
+            </form>
+        </p>
+
+        <hr>
+        <!-- comment form -->
+        {{> comments-form}}
+
+        <hr>
+
+        {{#each plano.comments}}
+            <p>{{this.content}}</p>
+        {{/each}}
+
+    </div>
+</div>
