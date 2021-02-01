@@ -1,4 +1,5 @@
 const Plano = require('../models/planos')
+const User = require('../models/users')
 
 module.exports = function(app){
     
@@ -6,7 +7,7 @@ module.exports = function(app){
     app.get('/planos/index', (req, res) => {
         var currentUser = req.user
 
-        Plano.find().lean()
+        Plano.find().lean().populate('author')
         .then(planos => {
             res.render('planos-index', { planos, currentUser })
         })
@@ -25,26 +26,48 @@ module.exports = function(app){
     // create
     app.post('/planos', (req, res) => {
         if (req.user) {
-            Plano.create(req.body)
-            .then((plano) => {
-                console.log(plano)
-                res.redirect(`/planos/${plano._id}`)
-            })
-            .catch((err) => {
-                console.log(err.message)
-            })
+            var plano = new Plano(req.body)
+            plano.author = req.user._id
+            plano
+                .save()
+                .then(plano => {
+                    return User.findById(req.user._id)
+                })
+                .then(user => {
+                    user.planos.unshift(plano)
+                    user.save()
+                    res.redirect(`/planos/${plano._id}`)
+                })
+                .catch(err => {
+                    console.log(err.message)
+                })
         }
         else {
             return res.status(401)
         }
     })
+    // app.post('/planos', (req, res) => {
+    //     if (req.user) {
+    //         Plano.create(req.body)
+    //         .then((plano) => {
+    //             console.log(plano)
+    //             res.redirect(`/planos/${plano._id}`)
+    //         })
+    //         .catch((err) => {
+    //             console.log(err.message)
+    //         })
+    //     }
+    //     else {
+    //         return res.status(401)
+    //     }
+    // })
 
     // show
     app.get('/planos/:id', (req, res) => {
         var currentUser = req.user
 
         Plano.findById(req.params.id).lean()
-        .populate('comments')
+        .populate('comments').populate('author')
         .then((plano) => {
             res.render('planos-show', { plano, currentUser })
         })
@@ -58,7 +81,7 @@ module.exports = function(app){
         var currentUser = req.user
 
         Plano.findById(req.params.id, function(err, plano) {
-            res.render('planos-edit', { planos, currentUser })
+            res.render('planos-edit', { plano, currentUser })
         }).lean()
     })
 
