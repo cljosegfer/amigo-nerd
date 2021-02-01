@@ -67,7 +67,7 @@ module.exports = function(app){
         var currentUser = req.user
 
         Plano.findById(req.params.id).lean()
-        .populate('comments').populate('author')
+        .populate({path:'comments', populate: {path: 'author'}}).populate('author')
         .then((plano) => {
             res.render('planos-show', { plano, currentUser })
         })
